@@ -27,13 +27,14 @@ buscador = driver.find_element(By.NAME, "q")
 buscador.send_keys("inmuebles en Bogotá")
 buscador.send_keys(Keys.RETURN)
 
-# Esperar hasta que aparezcan los resultados individuales
-WebDriverWait(driver, 10).until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, ".b_algo"))
+
+# Esperar hasta que aparezcan los resultados individuales (más general y más tiempo)
+WebDriverWait(driver, 20).until(
+    EC.presence_of_element_located((By.CSS_SELECTOR, ".b_vList .b_algo, .b_search .b_algo, .b_algo, li"))
 )
 
-# Validar que exista algún resultado
-resultados = driver.find_elements(By.CSS_SELECTOR, ".b_algo")
+# Validar que exista algún resultado (más general)
+resultados = driver.find_elements(By.CSS_SELECTOR, ".b_vList .b_algo, .b_search .b_algo, .b_algo, li")
 if len(resultados) == 0:
     print(driver.page_source)  # Solo imprime el HTML si no hay resultados
 assert len(resultados) > 0, "No se encontraron resultados."
