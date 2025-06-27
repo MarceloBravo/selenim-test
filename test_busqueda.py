@@ -28,6 +28,7 @@ WebDriverWait(driver, 10).until(
 
 # Validar que exista algún resultado
 resultados = driver.find_elements(By.CSS_SELECTOR, ".react-results--main")
+print(driver.page_source)  # Imprime el HTML actual de la página
 assert len(resultados) > 0, "No se encontraron resultados."
 
 print("Prueba funcional completada con éxito")
