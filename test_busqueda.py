@@ -7,11 +7,15 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 from selenium.webdriver.chrome.options import Options
 
+
 chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--headless")  # Ejecutar sin interfaz gráfica
 chrome_options.add_argument("--user-data-dir=/tmp/chrome-profile")
+chrome_options.add_argument(
+    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
+)
 
 driver = webdriver.Chrome(options=chrome_options)
 driver.get("https://duckduckgo.com/")
@@ -21,14 +25,16 @@ buscador = driver.find_element(By.NAME, "q")
 buscador.send_keys("inmuebles en Bogotá")
 buscador.send_keys(Keys.RETURN)
 
-# Esperar hasta que aparezcan los resultados
+
+# Esperar hasta que aparezcan los resultados individuales
 WebDriverWait(driver, 10).until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, ".results"))
+    EC.presence_of_element_located((By.CSS_SELECTOR, ".result"))
 )
 
 # Validar que exista algún resultado
-resultados = driver.find_elements(By.CSS_SELECTOR, ".results")
-print(driver.page_source)  # Imprime el HTML actual de la página
+resultados = driver.find_elements(By.CSS_SELECTOR, ".result")
+if len(resultados) == 0:
+    print(driver.page_source)  # Solo imprime el HTML si no hay resultados
 assert len(resultados) > 0, "No se encontraron resultados."
 
 print("Prueba funcional completada con éxito")
