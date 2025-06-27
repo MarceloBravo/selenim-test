@@ -1,0 +1,46 @@
+name: Selenium Python Test                                           # Nombre del workflow
+
+on:                                                                  # Evento que dispara el workflow
+  push:                                                              # Al hacer push
+    branches:                                                        # En las siguientes ramas
+      - main
+      - master
+      - develop
+
+jobs:                                                                 # Definición de los jobs
+  selenium-test:                                                      # Nombre del job
+    runs-on: ubuntu-latest                                            # Corre en Ubuntu
+    steps:                                                            # Pasos del job
+      - name: Checkout code                                           # Paso: clonar el repo
+        uses: actions/checkout@v4                                     # Usa la acción oficial para checkout
+
+      - name: Set up Python                                           # Paso: configurar Python
+        uses: actions/setup-python@v5                                 # Usa la acción oficial para Python
+        with:
+          python-version: '3.11'                                      # Versión de Python
+
+      - name: Install dependencies                                    # Paso: instalar dependencias
+        run: |
+          python -m venv venv                                         
+          source venv/bin/activate                                    
+          pip install --upgrade pip                                   
+          pip install selenium                                        
+
+      - name: Download ChromeDriver                                   # Paso: descargar ChromeDriver
+        run: |
+          sudo apt-get update                                         
+          sudo apt-get install -y wget unzip                          
+          wget -O chromedriver.zip https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/137.0.7151.119/linux64/chromedriver-linux64.zip  
+          unzip chromedriver.zip                                      
+          chmod +x chromedriver-linux64/chromedriver                  
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver  # Mover a /usr/local/bin
+
+      - name: Install Google Chrome                                   # Paso: instalar Google Chrome
+        uses: browser-actions/setup-chrome@v1                         # Usa acción para instalar Chrome
+
+      - name: Run Selenium test                                       # Paso: ejecutar el test
+        env:
+          PATH: /usr/local/bin:$PATH                                  # Asegura que chromedriver esté en el PATH
+        run: |
+          source venv/bin/activate                                    
+          python test_busqueda.py                                     
