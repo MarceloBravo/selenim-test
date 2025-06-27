@@ -17,22 +17,23 @@ chrome_options.add_argument(
     "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
 )
 
+
+# Cambiar a Bing para evitar bloqueos de DuckDuckGo en CI
 driver = webdriver.Chrome(options=chrome_options)
-driver.get("https://duckduckgo.com/")
+driver.get("https://www.bing.com/")
 
 # Buscar campo de texto
 buscador = driver.find_element(By.NAME, "q")
 buscador.send_keys("inmuebles en Bogotá")
 buscador.send_keys(Keys.RETURN)
 
-
 # Esperar hasta que aparezcan los resultados individuales
 WebDriverWait(driver, 10).until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, ".result"))
+    EC.presence_of_element_located((By.CSS_SELECTOR, ".b_algo"))
 )
 
 # Validar que exista algún resultado
-resultados = driver.find_elements(By.CSS_SELECTOR, ".result")
+resultados = driver.find_elements(By.CSS_SELECTOR, ".b_algo")
 if len(resultados) == 0:
     print(driver.page_source)  # Solo imprime el HTML si no hay resultados
 assert len(resultados) > 0, "No se encontraron resultados."
