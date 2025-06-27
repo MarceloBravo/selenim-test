@@ -20,7 +20,7 @@ chrome_options.add_argument(
 
 # Cambiar a Bing para evitar bloqueos de DuckDuckGo en CI
 driver = webdriver.Chrome(options=chrome_options)
-driver.get("https://www.bing.com/")
+driver.get("https://www.duckduckgo.com/")
 
 # Buscar campo de texto
 buscador = driver.find_element(By.NAME, "q")
